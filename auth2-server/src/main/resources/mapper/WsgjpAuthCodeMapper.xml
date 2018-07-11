@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiyego.wsgjp.dao.WsgjpAuthCodeMapper">
+
+  <resultMap id="BaseResultMap" type="com.qiyego.wsgjp.entity.WsgjpAuthCode">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="customer_id" jdbcType="BIGINT" property="customerId" />
+    <result column="auth_token" jdbcType="VARCHAR" property="authToken" />
+    <result column="app_key" jdbcType="VARCHAR" property="appKey" />
+    <result column="profile_id" jdbcType="VARCHAR" property="profileId" />
+    <result column="employee_id" jdbcType="VARCHAR" property="employeeId" />
+    <result column="expires_in" jdbcType="VARCHAR" property="expiresIn" />
+    <result column="refresh_token" jdbcType="VARCHAR" property="refreshToken" />
+    <result column="re_expires_in" jdbcType="VARCHAR" property="reExpiresIn" />
+    <result column="timestamp" jdbcType="VARCHAR" property="timestamp" />
+    <result column="data_status" jdbcType="VARCHAR" property="dataStatus" />
+    <result column="data_package_update_time" jdbcType="TIMESTAMP" property="dataPackageUpdateTime" />
+    <result column="token_update_time" jdbcType="TIMESTAMP" property="tokenUpdateTime" />
+    <result column="user_auth_update_time" jdbcType="TIMESTAMP" property="userAuthUpdateTime" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="erp_company_name" jdbcType="VARCHAR" property="erpCompanyName" />
+    <result column="erp_username" jdbcType="VARCHAR" property="erpUsername" />
+    <result column="erp_password" jdbcType="VARCHAR" property="erpPassword" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, customer_id, auth_token, app_key, profile_id, employee_id, expires_in, refresh_token,
+    re_expires_in, timestamp, data_status, data_package_update_time, token_update_time, user_auth_update_time,company_name,
+    erp_company_name,erp_username,erp_password
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from gjs_business.wsgjp_auth_code
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+    <select id="selectByCustomerId" resultMap="BaseResultMap">
+        SELECT * FROM gjs_business.wsgjp_auth_code au WHERE au.customer_id = #{customerId,jdbcType=BIGINT} LIMIT 1
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from gjs_business.wsgjp_auth_code
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.qiyego.wsgjp.entity.WsgjpAuthCode">
+    insert into gjs_business.wsgjp_auth_code (id, customer_id, auth_token,
+      app_key, profile_id, employee_id,
+      expires_in, refresh_token, re_expires_in,
+      timestamp, data_status, data_package_update_time,
+      token_update_time, user_auth_update_time,company_name,erp_company_name,erp_username,erp_password)
+    values (#{id,jdbcType=BIGINT}, #{customerId,jdbcType=BIGINT}, #{authToken,jdbcType=VARCHAR},
+      #{appKey,jdbcType=VARCHAR}, #{profileId,jdbcType=VARCHAR}, #{employeeId,jdbcType=VARCHAR},
+      #{expiresIn,jdbcType=VARCHAR}, #{refreshToken,jdbcType=VARCHAR}, #{reExpiresIn,jdbcType=VARCHAR},
+      #{timestamp,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR}, #{dataPackageUpdateTime,jdbcType=TIMESTAMP},
+      #{tokenUpdateTime,jdbcType=TIMESTAMP}, #{userAuthUpdateTime,jdbcType=TIMESTAMP},#{companyName,jdbcType=VARCHAR},
+      #{erpCompanyName,jdbcType=VARCHAR},#{erpUsername,jdbcType=VARCHAR},#{erpPassword,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.qiyego.wsgjp.entity.WsgjpAuthCode">
+    insert into gjs_business.wsgjp_auth_code
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="authToken != null">
+        auth_token,
+      </if>
+      <if test="appKey != null">
+        app_key,
+      </if>
+      <if test="profileId != null">
+        profile_id,
+      </if>
+      <if test="employeeId != null">
+        employee_id,
+      </if>
+      <if test="expiresIn != null">
+        expires_in,
+      </if>
+      <if test="refreshToken != null">
+        refresh_token,
+      </if>
+      <if test="reExpiresIn != null">
+        re_expires_in,
+      </if>
+      <if test="timestamp != null">
+        timestamp,
+      </if>
+      <if test="dataStatus != null">
+        data_status,
+      </if>
+      <if test="dataPackageUpdateTime != null">
+        data_package_update_time,
+      </if>
+      <if test="tokenUpdateTime != null">
+        token_update_time,
+      </if>
+      <if test="userAuthUpdateTime != null">
+        user_auth_update_time,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="erpCompanyName != null">
+        erp_company_name,
+      </if>
+      <if test="erpUsername != null">
+        erp_username,
+      </if>
+      <if test="erpPassword != null">
+        erp_password,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="authToken != null">
+        #{authToken,jdbcType=VARCHAR},
+      </if>
+      <if test="appKey != null">
+        #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="profileId != null">
+        #{profileId,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="expiresIn != null">
+        #{expiresIn,jdbcType=VARCHAR},
+      </if>
+      <if test="refreshToken != null">
+        #{refreshToken,jdbcType=VARCHAR},
+      </if>
+      <if test="reExpiresIn != null">
+        #{reExpiresIn,jdbcType=VARCHAR},
+      </if>
+      <if test="timestamp != null">
+        #{timestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="dataStatus != null">
+        #{dataStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="dataPackageUpdateTime != null">
+        #{dataPackageUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tokenUpdateTime != null">
+        #{tokenUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userAuthUpdateTime != null">
+        #{userAuthUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="erpCompanyName != null">
+        #{erpCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="erpUsername != null">
+        #{erpUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="erpPassword != null">
+        #{erpPassword,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.qiyego.wsgjp.entity.WsgjpAuthCode">
+    update gjs_business.wsgjp_auth_code
+    <set>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="authToken != null">
+        auth_token = #{authToken,jdbcType=VARCHAR},
+      </if>
+      <if test="appKey != null">
+        app_key = #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="profileId != null">
+        profile_id = #{profileId,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeId != null">
+        employee_id = #{employeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="expiresIn != null">
+        expires_in = #{expiresIn,jdbcType=VARCHAR},
+      </if>
+      <if test="refreshToken != null">
+        refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      </if>
+      <if test="reExpiresIn != null">
+        re_expires_in = #{reExpiresIn,jdbcType=VARCHAR},
+      </if>
+      <if test="timestamp != null">
+        timestamp = #{timestamp,jdbcType=VARCHAR},
+      </if>
+      <if test="dataStatus != null">
+        data_status = #{dataStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="dataPackageUpdateTime != null">
+        data_package_update_time = #{dataPackageUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tokenUpdateTime != null">
+        token_update_time = #{tokenUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userAuthUpdateTime != null">
+        user_auth_update_time = #{userAuthUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="companyName != null">
+        company_name =  #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="erpCompanyName != null">
+        erp_company_name =  #{erpCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="erpUsername != null">
+        erp_username =  #{erpUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="erpPassword != null">
+        erp_password =  #{erpPassword,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.qiyego.wsgjp.entity.WsgjpAuthCode">
+    update gjs_business.wsgjp_auth_code
+    set customer_id = #{customerId,jdbcType=BIGINT},
+      auth_token = #{authToken,jdbcType=VARCHAR},
+      app_key = #{appKey,jdbcType=VARCHAR},
+      profile_id = #{profileId,jdbcType=VARCHAR},
+      employee_id = #{employeeId,jdbcType=VARCHAR},
+      expires_in = #{expiresIn,jdbcType=VARCHAR},
+      refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      re_expires_in = #{reExpiresIn,jdbcType=VARCHAR},
+      timestamp = #{timestamp,jdbcType=VARCHAR},
+      data_status = #{dataStatus,jdbcType=VARCHAR},
+      data_package_update_time = #{dataPackageUpdateTime,jdbcType=TIMESTAMP},
+      token_update_time = #{tokenUpdateTime,jdbcType=TIMESTAMP},
+      user_auth_update_time = #{userAuthUpdateTime,jdbcType=TIMESTAMP},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      erp_company_name =  #{erpCompanyName,jdbcType=VARCHAR},
+      erp_username =  #{erpUsername,jdbcType=VARCHAR},
+      erp_password =  #{erpPassword,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectTaskList" resultMap="BaseResultMap">
+    SELECT * FROM gjs_business.wsgjp_auth_code wac WHERE wac.data_status='NOT_GET'
+  </select>
+
+</mapper>
