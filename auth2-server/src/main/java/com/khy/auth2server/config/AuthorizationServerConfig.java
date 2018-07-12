@@ -30,6 +30,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private MyClientDetailsService myClientDetailsService;
 
+    /**
+     * 配置令牌端点(Token Endpoint)的安全约束.
+     * @param security
+     * @throws Exception
+     */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         super.configure(security);
@@ -53,6 +58,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
 
+    /**
+     * 配置授权（authorization）以及令牌（token）的访问端点和令牌服务(token services)
+     * @param endpoints
+     * @throws Exception
+     */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         // 配置TokenServices参数
