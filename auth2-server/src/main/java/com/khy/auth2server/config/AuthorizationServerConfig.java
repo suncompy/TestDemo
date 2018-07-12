@@ -9,17 +9,26 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
+import java.util.concurrent.TimeUnit;
 
+
+/**
+ * 授权服务配置
+ */
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     private RedisConnectionFactory connectionFactory;
+
+    @Autowired
+    private MyClientDetailsService myClientDetailsService;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -34,19 +43,26 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        JdbcTokenStore
-        clients.cl // 使用in-memory存储
-                .withClient("my-client-1") //（必须的）用来标识客户的Id。
-                .secret("$2a$10$0jyHr4rGRdQw.X9mrLkVROdQI8.qnWJ1Sl8ly.yzK0bp06aaAkL9W") //（需要值得信任的客户端）客户端安全码，如果有的话。
-                .authorizedGrantTypes("authorization_code", "refresh_token") // 该client允许的授权类型,默认为空。
-                .scopes("read", "write", "execute") //用来限制客户端的访问范围，如果为空（默认）的话，那么客户端拥有全部的访问范围。
-                .redirectUris("http://localhost:8081/login/oauth2/code/callback");
-//                .redirectUris("http://www.baidu.com");
+        clients.withClientDetails(myClientDetailsService);
+//        clients.inMemory() // 使用in-memory存储
+//                .withClient("my-client-1") //（必须的）用来标识客户的Id。
+//                .secret("$2a$10$0jyHr4rGRdQw.X9mrLkVROdQI8.qnWJ1Sl8ly.yzK0bp06aaAkL9W") //（需要值得信任的客户端）客户端安全码，如果有的话。
+//                .authorizedGrantTypes("authorization_code", "refresh_token") // 该client允许的授权类型,默认为空。
+//                .scopes("read", "write", "execute") //用来限制客户端的访问范围，如果为空（默认）的话，那么客户端拥有全部的访问范围。
+//                .redirectUris("http://localhost:8081/login/oauth2/code/callback");
     }
+
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.tokenStore(tokenStore());
+        // 配置TokenServices参数
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(endpoints.getTokenStore());
+        tokenServices.setSupportRefreshToken(false);
+        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
+        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
+        tokenServices.setAccessTokenValiditySeconds( (int) TimeUnit.DAYS.toSeconds(30)); // 30天
+        endpoints.tokenServices(tokenServices);
     }
 
     @Bean
