@@ -82,3 +82,6 @@ CREATE TABLE IF NOT EXISTS `oauth2`.`oauth_refresh_token` (
   `authentication` BLOB NULL DEFAULT NULL)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
+insert into oauth_client_details(client_id,resource_ids,client_secret,scope,authorized_grant_types,authorities)
+values('client','sparklr','secret','read,write','authorization_code','ROLE_CLIENT');

@@ -1,3 +1,4 @@
+/*
 package com.khy.auth2server.config;
 
 import org.apache.commons.logging.Log;
@@ -156,3 +157,4 @@ public class MybatisTokenStore implements TokenStore {
 
 }
 
+*/
