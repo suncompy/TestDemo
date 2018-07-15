@@ -1,8 +1,11 @@
 package com.khy.auth2server.config;
 
+import com.khy.auth2server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -32,6 +35,22 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private MyClientDetailsService myClientDetailsService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserService userService;
+
+    @Bean // 声明TokenStore实现
+    public TokenStore tokenStore() {
+        return new JdbcTokenStore(dataSource);
+    }
+
+    /*@Bean // 声明 ClientDetails实现
+    public ClientDetailsService clientDetails() {
+        return new JdbcClientDetailsService(dataSource);
+    }*/
+
     /**
      * 配置令牌端点(Token Endpoint)的安全约束.
      *
@@ -53,7 +72,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        System.out.println("=========================one");
+        System.out.println("ClientDetailsServiceConfigurer");
         clients.withClientDetails(myClientDetailsService);
 //        clients.inMemory() // 使用in-memory存储
 //                .withClient("my-client-1") //（必须的）用来标识客户的Id。
@@ -72,16 +91,19 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        System.out.println("=========================two");
+        System.out.println("AuthorizationServerEndpointsConfigurer");
+        endpoints.authenticationManager(authenticationManager);
+        endpoints.userDetailsService(userService);
         endpoints.tokenStore(tokenStore());
+        endpoints.setClientDetailsService(myClientDetailsService);
 
-        // 配置TokenServices参数
+        //配置TokenServices参数
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setTokenStore(endpoints.getTokenStore());
-        tokenServices.setSupportRefreshToken(false);
+        tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
         tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
-        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30)); // 30天
+        tokenServices.setAccessTokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(1)); // 1天
         endpoints.tokenServices(tokenServices);
     }
 
@@ -94,11 +116,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public ClientDetailsService clientDetails() {
         return new MyClientDetailsService();
     }*/
-
-    @Bean // 声明TokenStore实现
-    public TokenStore tokenStore() {
-        return new JdbcTokenStore(dataSource);
-    }
 
 
     public static void main(String[] args) {

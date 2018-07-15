@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 
 @Configuration
 @EnableResourceServer
-@Order(6)
 class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Override
@@ -20,9 +19,8 @@ class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        System.out.println("====================ResourceServerConfiguration.configure(HttpSecurity http)");
-        // @formatter:off
-        http
+        System.out.println("ResourceServerConfiguration.configure(HttpSecurity http)");
+        /*http
                 // Since we want the protected resources to be accessible in the UI as well we need
                 // session creation to be allowed (it's disabled by default in 2.0.6)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -31,8 +29,10 @@ class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
                 .antMatchers("/user/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/profile").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))");
-        // @formatter:on
+                .antMatchers("/user/profile").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))");*/
+
+        http.authorizeRequests().antMatchers("/**").authenticated()
+                .anyRequest().authenticated();
     }
 
 }
