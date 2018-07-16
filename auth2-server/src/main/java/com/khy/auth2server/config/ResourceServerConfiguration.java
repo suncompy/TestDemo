@@ -35,9 +35,9 @@ class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user/profile").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))");*/
-
-        http.authorizeRequests().antMatchers("/**").authenticated()
-                .anyRequest().authenticated();
+//http.authorizeRequests().antMatchers("/**").authenticated();//全部都要认证
+        http.authorizeRequests().antMatchers("/order/**").authenticated();//配置order访问控制，必须认证过后才可以访问
+                //.anyRequest().authenticated();
     }
 
 }

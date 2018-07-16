@@ -54,13 +54,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     /**
      * 配置令牌端点(Token Endpoint)的安全约束.
      *
+     * 创建客户端身份认证核心过滤器ClientCredentialsTokenEndpointFilter
      * @param security
      * @throws Exception
      */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         System.out.println("=========================three");
-        super.configure(security);
+        //super.configure(security);
+        //主要是让/oauth/token支持client_id以及client_secret作登录认证
+        security.allowFormAuthenticationForClients();
     }
 
     /**
