@@ -37,8 +37,9 @@ public class MyClientDetailsService implements ClientDetailsService {
             //受保护资源id
             List<String> resourceList = new ArrayList<>();
             resourceList.add(client.getResourceIds());
+            resourceList.add(ResourceId.DEMO_RESOURCE_ID);
             //客户端所能访问的资源id集合,多个资源时用逗号(,)分隔,如: "unity-resource,mobile-resource".
-            //details.setResourceIds(resourceList);
+            details.setResourceIds(resourceList);
             //该client允许的授权类型,默认为空;,oauth2保护模式;客户端认证模式:client_credentials
             List<String> authorizedGrantTypes = new ArrayList<>();
             authorizedGrantTypes.add("client_credentials");

@@ -35,14 +35,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         System.out.println("==============SecurityConfiguration.configure(HttpSecurity http)");
-        http
+        /*http
                 .authorizeRequests()
-                .anyRequest().permitAll();//所以资源
+                .anyRequest().permitAll();//所以资源*/
+
+        http .authorizeRequests().antMatchers("/login").permitAll().and()
+                // default protection for all resources (including /oauth/authorize)
+                .authorizeRequests() .anyRequest().hasRole("ADMIN");
+        // ... more configuration, e.g. for form login
     }
 
     public static void main(String[] args) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        System.out.println(bCryptPasswordEncoder.encode("123456"));
+        System.out.println(bCryptPasswordEncoder.encode("secret"));
         System.out.println(bCryptPasswordEncoder.encode("10086"));
     }
 }

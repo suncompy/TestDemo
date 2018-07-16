@@ -1,10 +1,14 @@
 package com.khy.auth2server.service.impl;
 
+import com.khy.auth2server.entity.SysRole;
 import com.khy.auth2server.entity.SysUser;
 import com.khy.auth2server.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -14,7 +18,12 @@ public class UserServiceImpl implements UserService {
         /*模拟数据库操作*/
         SysUser user = new SysUser();
         user.setUsername("10086");
-        user.setPassword("$2a$10$QCvT94eLvryUy9CHlTabL.ssvjUwnyKnSZq4cqkJ1RTS2vHsA/MUC");
+        user.setPassword("$2a$10$Z2NtLTWEiD.ZRM/WxOGqduNkp457Kb4BAvlizzAmf29Wuwf74wtbG");
+        List<SysRole> roles = Collections.emptyList();
+        SysRole sysRole = new SysRole();
+        sysRole.setId(1L);
+        sysRole.setName("ADMIN");
+        user.setRoles(roles);
         return user;
 
         /*SysUser user = sysUserRepository.findByUsername(s);

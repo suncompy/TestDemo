@@ -12,9 +12,14 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 @EnableResourceServer
 class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
+
+
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        super.configure(resources);//resources.resourceId(ResourcesIDs.USER_RESOURCE_ID).stateless(false);
+        //resourceId 用于分配给可授予的clientId
+        //stateless  标记以指示在这些资源上仅允许基于令牌的身份验证
+        //tokenStore token的存储方式（上一章节提到）
+        resources.resourceId(ResourceId.DEMO_RESOURCE_ID).stateless(true);//resources.resourceId(ResourcesIDs.USER_RESOURCE_ID).stateless(false);
     }
 
     @Override
