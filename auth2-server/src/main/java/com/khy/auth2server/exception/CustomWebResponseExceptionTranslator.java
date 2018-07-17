@@ -1,10 +1,12 @@
 package com.khy.auth2server.exception;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.exceptions.InsufficientScopeException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
+import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,29 @@ import java.io.IOException;
 
 @Service("customWebResponseExceptionTranslator")
 public class CustomWebResponseExceptionTranslator implements WebResponseExceptionTranslator {
+
+   /* @Bean
+    public WebResponseExceptionTranslator webResponseExceptionTranslator(){
+        return new DefaultWebResponseExceptionTranslator() {
+            @Override
+            public ResponseEntity translate(Exception e) throws Exception {
+                ResponseEntity responseEntity = super.translate(e);
+                OAuth2Exception body = (OAuth2Exception) responseEntity.getBody();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setAll(responseEntity.getHeaders().toSingleValueMap());
+                // do something with header or response
+                if(401==responseEntity.getStatusCode().value()){
+                    return new ResponseEntity("faile 401", headers, responseEntity.getStatusCode());
+                }else{
+                    return new ResponseEntity(body, headers, responseEntity.getStatusCode());
+                }
+
+            }
+        };
+
+        //return new CustomWebResponseExceptionTranslator();
+    }*/
+
 
     @Override
     public ResponseEntity<OAuth2Exception> translate(Exception e) throws Exception {
