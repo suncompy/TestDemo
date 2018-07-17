@@ -1,3 +1,4 @@
+/*
 package com.khy.auth2server.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,14 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import java.util.Date;
 import java.util.UUID;
 
+*/
 /**
+ * AuthorizationServerTokenServices的作用，他提供了创建token，刷新token，获取token的实现。
+ * 在创建token时，他会调用tokenStore对产生的token和相关信息存储到对应的实现类中，可以是redis，数据库，内存，jwt。
+ *
  * 管理令牌（Managing Token）
- */
+ *//*
+
 public class MyTokenService implements AuthorizationServerTokenServices {
 
     private int refreshTokenValiditySeconds = 60 * 60 * 24 * 30; // system default 30 days.
@@ -58,12 +64,14 @@ public class MyTokenService implements AuthorizationServerTokenServices {
         return null;
     }
 
-    /**
+    */
+/**
      * The access token validity period in seconds
      *
      * @param clientAuth the current authorization request
      * @return the access token validity period in seconds
-     */
+     *//*
+
     protected int getAccessTokenValiditySeconds(OAuth2Request clientAuth) {
         if (myClientDetailsService != null) {
             ClientDetails client = myClientDetailsService.loadClientByClientId(clientAuth.getClientId());
@@ -76,3 +84,4 @@ public class MyTokenService implements AuthorizationServerTokenServices {
     }
 
 }
+*/

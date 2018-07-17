@@ -67,7 +67,9 @@ public class MyClientDetailsService implements ClientDetailsService {
             //客户端的重定向URI,可为空
             //details.setRegisteredRedirectUri();
             //设置token有效时间，单位是秒，(如果不设置，框架内部默认是12小时，本平台设置默认2小时)
-            details.setAccessTokenValiditySeconds(2 * 3600);
+            details.setAccessTokenValiditySeconds(60);
+        }else {
+            details.setClientSecret("{bcrypt}");
         }
         return details;
     }

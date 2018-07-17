@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
         /*模拟数据库操作*/
         SysUser user = new SysUser();
         user.setUsername("10086");
-        user.setPassword("$2a$10$Z2NtLTWEiD.ZRM/WxOGqduNkp457Kb4BAvlizzAmf29Wuwf74wtbG");
+        user.setPassword("$2a$10$p3tvTg03hcETVqK4O1W71OC/1mxY8HM.cblWmazRqiyEfRZRuMEzi");
         List<SysRole> roles = Collections.emptyList();
         SysRole sysRole = new SysRole();
         sysRole.setId(1L);
