@@ -1,23 +1,29 @@
 package com.khy.auth2server.config;
 
+import com.khy.auth2server.exception.CustomWebResponseExceptionTranslator;
 import com.khy.auth2server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
+import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint;
+import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import javax.sql.DataSource;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -42,6 +48,28 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private UserService userService;
 
+    @Bean
+    public WebResponseExceptionTranslator webResponseExceptionTranslator(){
+        return new DefaultWebResponseExceptionTranslator() {
+            @Override
+            public ResponseEntity translate(Exception e) throws Exception {
+                ResponseEntity responseEntity = super.translate(e);
+                OAuth2Exception body = (OAuth2Exception) responseEntity.getBody();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setAll(responseEntity.getHeaders().toSingleValueMap());
+                // do something with header or response
+                if(401==responseEntity.getStatusCode().value()){
+                    return new ResponseEntity("faile 401", headers, responseEntity.getStatusCode());
+                }else{
+                    return new ResponseEntity(body, headers, responseEntity.getStatusCode());
+                }
+
+            }
+        };
+
+        //return new CustomWebResponseExceptionTranslator();
+    }
+
     @Bean // 声明TokenStore实现
     public TokenStore tokenStore() {
         return new JdbcTokenStore(dataSource);
@@ -51,6 +79,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public TokenEnhancer tokenEnhancer() {
         return new MyTokenEnhancer();
     }
+
     /*@Bean // 声明 ClientDetails实现
     public ClientDetailsService clientDetails() {
         return new JdbcClientDetailsService(dataSource);
@@ -58,8 +87,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     /**
      * 配置令牌端点(Token Endpoint)的安全约束.
-     *
+     * <p>
      * 创建客户端身份认证核心过滤器ClientCredentialsTokenEndpointFilter
+     *
      * @param security
      * @throws Exception
      */
@@ -106,7 +136,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.tokenStore(tokenStore());
         endpoints.setClientDetailsService(myClientDetailsService);
         endpoints.tokenEnhancer(tokenEnhancer());
-
+        endpoints.exceptionTranslator(webResponseExceptionTranslator());
 
         //配置TokenServices参数
         DefaultTokenServices tokenServices = new DefaultTokenServices();
