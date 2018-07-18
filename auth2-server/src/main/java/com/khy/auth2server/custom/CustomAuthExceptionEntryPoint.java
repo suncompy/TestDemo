@@ -23,7 +23,8 @@ public class CustomAuthExceptionEntryPoint implements AuthenticationEntryPoint {
             throws ServletException {
 
         Map map = new HashMap();
-        map.put("error", "4011");
+        map.put("is_error", "true");
+        map.put("code", "401");//tokan校验失败
         map.put("message", authException.getMessage());
         map.put("path", request.getServletPath());
         map.put("timestamp", String.valueOf(new Date().getTime()));

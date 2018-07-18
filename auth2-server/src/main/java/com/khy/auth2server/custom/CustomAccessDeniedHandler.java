@@ -29,7 +29,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setContentType("application/json;charset=UTF-8");
         Map map = new HashMap();
-        map.put("error", "4000");
+        map.put("is_error", "true");
+        map.put("code", "401");//无权访问
         map.put("message", accessDeniedException.getMessage());
         map.put("path", request.getServletPath());
         map.put("timestamp", String.valueOf(new Date().getTime()));

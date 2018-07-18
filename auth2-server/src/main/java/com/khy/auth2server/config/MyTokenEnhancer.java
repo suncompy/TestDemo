@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,11 @@ public class MyTokenEnhancer implements TokenEnhancer {
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         Map<String, Object> additionalInfo = new HashMap<>();
+
+        Map map = new HashMap();
         additionalInfo.put("is_error", "false");
+        additionalInfo.put("code", "200");
+        additionalInfo.put("timestamp", String.valueOf(new Date().getTime()));
         additionalInfo.put("message", "success");
         additionalInfo.put("client_id", authentication.getOAuth2Request().getClientId());
         //additionalInfo.put("organization", authentication.getName() + randomAlphabetic(4));
