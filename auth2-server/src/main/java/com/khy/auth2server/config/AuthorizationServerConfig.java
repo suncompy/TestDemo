@@ -1,7 +1,9 @@
 package com.khy.auth2server.config;
 
+import com.khy.auth2server.custom.CustomWebResponseExceptionTranslator;
 import com.khy.auth2server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +34,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private DataSource dataSource;
 
     @Autowired
+    @Qualifier("customWebResponseExceptionTranslator")
+    private CustomWebResponseExceptionTranslator customWebResponseExceptionTranslator;
+
+    @Autowired
     private MyClientDetailsService myClientDetailsService;
 
     @Autowired
@@ -54,6 +60,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public ClientDetailsService clientDetails() {
         return new JdbcClientDetailsService(dataSource);
     }*/
+
 
     /**
      * 配置令牌端点(Token Endpoint)的安全约束.
@@ -106,6 +113,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.tokenStore(tokenStore());
         endpoints.setClientDetailsService(myClientDetailsService);
         endpoints.tokenEnhancer(tokenEnhancer());
+        endpoints.exceptionTranslator(customWebResponseExceptionTranslator);
+        /*WebResponseExceptionTranslator webResponseExceptionTranslator = endpoints.getExceptionTranslator();
+        endpoints.exceptionTranslator(webResponseExceptionTranslator());
+        webResponseExceptionTranslator = endpoints.getExceptionTranslator();*/
+
 
         //配置TokenServices参数
         DefaultTokenServices tokenServices = new DefaultTokenServices();

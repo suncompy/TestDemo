@@ -1,4 +1,4 @@
-package com.khy.auth2server.exception;
+package com.khy.auth2server.custom;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

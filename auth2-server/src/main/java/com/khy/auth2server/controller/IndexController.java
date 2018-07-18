@@ -30,4 +30,9 @@ public class IndexController {
         return "order id : " + id;
     }
 
+    @GetMapping("/forbidden")
+    public String getForbidden() {
+        return "forbidden";
+    }
+
 }

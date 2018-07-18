@@ -11,11 +11,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    /*@Resource
+    private CustomLoginAuthProvider authProvider;*/
+
     @Bean
     UserDetailsService sysUserService() { //注册UserServiceImpl的bean
         return new UserServiceImpl();
@@ -32,8 +34,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    /*@Autowired
+    @Qualifier("appLoginFailureHandler")
+    private AuthenticationFailureHandler appLoginFailureHandler;
+
+    @Autowired
+    private AuthenticationSuccessHandler appLoginInSuccessHandler;*/
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.authenticationProvider(authProvider);
         auth.userDetailsService(sysUserService()).passwordEncoder(new BCryptPasswordEncoder()); //添加我们自定义的user detail service认证
     }
 
@@ -41,6 +51,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         System.out.println("==============SecurityConfiguration.configure(HttpSecurity http)");
         http
+                /*.formLogin()
+                .successHandler(appLoginInSuccessHandler)//登录成功处理器
+                .failureHandler(appLoginFailureHandler).and()
+                .openidLogin() .failureHandler(appLoginFailureHandler).and()
+                .oauth2Login().failureHandler(appLoginFailureHandler).and()*/
                 .authorizeRequests()
                 .anyRequest().permitAll();//所以资源
 
