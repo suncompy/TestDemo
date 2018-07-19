@@ -1,7 +1,7 @@
 package com.khy.auth2server.config;
 
-import com.khy.auth2server.custom.CustomAuthExceptionEntryPoint;
 import com.khy.auth2server.custom.CustomAccessDeniedHandler;
+import com.khy.auth2server.custom.CustomAuthExceptionEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +18,13 @@ class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Autowired
     @Qualifier("customAccessDeniedHandler")
     private CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    /*@Autowired
+    @Qualifier("appLoginFailureHandler")
+    private AuthenticationFailureHandler appLoginFailureHandler;
+
+    @Autowired
+    private AuthenticationSuccessHandler appLoginInSuccessHandler;*/
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -89,6 +96,8 @@ class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
                 .antMatchers("/user/profile").access("#oauth2.hasScope('read') or (!#oauth2.isOAuth() and hasRole('ROLE_USER'))");*/
 //http.authorizeRequests().antMatchers("/**").authenticated();//全部都要认证
         http
+
+
                 .authorizeRequests().antMatchers("/order/**").authenticated()//配置order访问控制，必须认证过后才可以访问
                 .antMatchers("/forbidden").hasRole("KHY");
 

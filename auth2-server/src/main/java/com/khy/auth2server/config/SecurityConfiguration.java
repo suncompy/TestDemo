@@ -34,13 +34,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    /*@Autowired
-    @Qualifier("appLoginFailureHandler")
-    private AuthenticationFailureHandler appLoginFailureHandler;
-
-    @Autowired
-    private AuthenticationSuccessHandler appLoginInSuccessHandler;*/
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //        auth.authenticationProvider(authProvider);

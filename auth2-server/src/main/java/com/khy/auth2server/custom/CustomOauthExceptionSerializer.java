@@ -24,8 +24,10 @@ public class CustomOauthExceptionSerializer extends StdSerializer<CustomOauthExc
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
         gen.writeStartObject();
-        gen.writeStringField("error", String.valueOf(value.getHttpErrorCode()));
+        gen.writeStringField("is_error", "true");
         gen.writeStringField("message", value.getMessage());
+        gen.writeStringField("code", String.valueOf(value.getHttpErrorCode()));
+        gen.writeStringField("auth_error_code", value.getOAuth2ErrorCode());
 //        gen.writeStringField("message", "用户名或密码错误");
         gen.writeStringField("path", request.getServletPath());
         gen.writeStringField("timestamp", String.valueOf(new Date().getTime()));

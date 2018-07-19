@@ -1,4 +1,3 @@
-/*
 package com.khy.auth2server.handler;
 
 import com.alibaba.fastjson.JSON;
@@ -74,15 +73,14 @@ public class AppLoginInSuccessHandler extends SavedRequestAwareAuthenticationSuc
 
     }
 
-    */
 /**
      * 解码
      *
      * @param header
      * @param request
      * @return
-     * @throws IOException
-     *//*
+     * @throws IOException*/
+
 
     private String[] extractAndDecodeHeader(String header, HttpServletRequest request) throws IOException {
         byte[] base64Token = header.substring(6).getBytes("UTF-8");
@@ -103,4 +101,3 @@ public class AppLoginInSuccessHandler extends SavedRequestAwareAuthenticationSuc
         }
     }
 }
-*/
