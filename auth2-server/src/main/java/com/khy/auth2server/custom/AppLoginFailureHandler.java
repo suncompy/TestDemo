@@ -1,3 +1,4 @@
+/*
 package com.khy.auth2server.custom;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,3 +32,4 @@ public class AppLoginFailureHandler extends SimpleUrlAuthenticationFailureHandle
         }
     }
 }
+*/
