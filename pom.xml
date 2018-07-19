@@ -11,6 +11,7 @@
     <modules>
         <module>Utils</module>
         <module>auth2-server</module>
+        <module>jwt-server</module>
     </modules>
 
     <packaging>pom</packaging>

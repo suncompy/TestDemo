@@ -1,8 +1,8 @@
-package com.khy.auth2server.service.impl;
+package com.khy.jwt.service.impl;
 
-import com.khy.auth2server.entity.SysRole;
-import com.khy.auth2server.entity.SysUser;
-import com.khy.auth2server.service.UserService;
+import com.khy.jwt.entity.JwtUser;
+import com.khy.jwt.entity.Role;
+import com.khy.jwt.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -14,11 +14,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         /*模拟数据库操作*/
-        SysUser user = new SysUser();
+        JwtUser user = new JwtUser();
         user.setUsername("10086");
         user.setPassword("$2a$10$p3tvTg03hcETVqK4O1W71OC/1mxY8HM.cblWmazRqiyEfRZRuMEzi");
-        List<SysRole> roles = Collections.emptyList();
-        SysRole sysRole = new SysRole();
+        List<Role> roles = Collections.emptyList();
+        Role sysRole = new Role();
         sysRole.setId(1L);
         sysRole.setName("ADMIN");
         user.setRoles(roles);
