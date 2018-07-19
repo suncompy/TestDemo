@@ -1,8 +1,6 @@
 package com.khy.jwt.filter;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.khy.jwt.entity.JwtUser;
 import com.khy.jwt.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,13 +18,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-import static com.khy.jwt.utils.JwtUtil.USER_INFO;
-
 /**
  * 验证用户名密码正确后，生成一个token，并将token返回给客户端
  * 该类继承自UsernamePasswordAuthenticationFilter，重写了其中的2个方法
  * attemptAuthentication ：接收并解析用户凭证。
  * successfulAuthentication ：用户成功登录后，这个方法会被调用，我们在这个方法里生成token。
+ *
+ * 重写过滤器，修改form方式为标准的post
+ *
  */
 @Slf4j
 public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -37,11 +36,11 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         this.authenticationManager = authenticationManager;
     }
 
-    // 注入用户的信息
+    // 接收并解析用户凭证
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
-        log.debug("根据token注入用户权限信息");
-        Map<String, Object> claims = null;
+        log.debug("接收并解析用户凭证");
+        /*Map<String, Object> claims = null;
         try {
             claims = JwtUtil.validateTokenAndGetClaims(req);
             String userStr = String.valueOf(claims.get(USER_INFO));
@@ -55,6 +54,19 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         } catch (IOException e) {
             log.error("根据token注入用户权限信息错误，claims=" + JSON.toJSONString(claims));
             log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }*/
+        try {
+            //JwtUser user = new ObjectMapper().readValue(req.getInputStream(), JwtUser.class);
+            String username = req.getParameter("username");
+            String password = req.getParameter("password");
+            return authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            username,
+                            password,
+                            new ArrayList<>())
+            );
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,5 +1,6 @@
 package com.khy.jwt.config;
 
+import com.khy.jwt.filter.JWTAuthenticationFilter;
 import com.khy.jwt.filter.JWTLoginFilter;
 import com.khy.jwt.service.impl.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -50,19 +51,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // 设置 HTTP 验证规则
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http.cors().and()
+                // 由于使用的是JWT，我们这里不需要csrf(跨站请求伪造)
+                .csrf().disable()
+                // 基于token，所以不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // 允许对于网站静态资源的无授权访问
                 .antMatchers(AUTH_WHITELIST).permitAll()
+                // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()  // 所有请求需要身份认证
                 .and()
                 //将我们定义的JWT方法加入SpringSecurity的处理流程中。
                 .addFilter(new JWTLoginFilter(authenticationManager()))
-                //.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .logout() // 默认注销行为为logout，可以通过下面的方式来修改
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .permitAll();// 设置注销成功后跳转页面，默认是跳转到登录页面;
+        // 禁用缓存
+        http.headers().cacheControl();
     }
 
     @Override

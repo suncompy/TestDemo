@@ -1,6 +1,9 @@
-/*
+
 package com.khy.jwt.filter;
 
+import com.alibaba.fastjson.JSON;
+import com.khy.jwt.entity.JwtUser;
+import com.khy.jwt.utils.JwtUtil;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -17,19 +20,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
-*/
+
 /**
  * token的校验和解析
  * 该类继承自BasicAuthenticationFilter，在doFilterInternal方法中，
  * 从http头的Authorization 项读取token数据，然后用Jwts包提供的方法校验token的合法性。
  * 如果校验通过，就认为这是一个取得授权的合法请求
- *//*
+ */
 
-@Slf4j
 public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -37,18 +40,31 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        log.info("进入doFilterInternal过滤器进行token的校验和解析");
-        String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
+        log.debug("进入doFilterInternal过滤器进行token的校验和解析");
+        //String header = request.getHeader("Authorization");
+        Map<String, Object> parseToken = JwtUtil.validateTokenAndGetClaims(request);
+        String str = JSON.toJSONString(parseToken);
+        JwtUser jwtUser = JSON.parseObject(str, JwtUser.class);
+        /*return authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getUsername(),
+                        user.getPassword(),
+                        user.getAuthorities())
+        );*/
+
+        /*if (header == null || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
-        }
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        }*/
+        //UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(
+                        jwtUser.getUsername(), null, jwtUser.getAuthorities()
+                ));
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    /*private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token == null || token.isEmpty()) {
             throw new TokenException("Token为空");
@@ -86,7 +102,6 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             throw new TokenException("非法参数异常");
         }
         return null;
-    }
+    }*/
 
 }
-*/

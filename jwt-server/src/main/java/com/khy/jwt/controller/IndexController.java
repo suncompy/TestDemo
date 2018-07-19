@@ -19,6 +19,7 @@ import java.io.IOException;
 public class IndexController {
 
     @RequestMapping("/hello")
+    //@PreAuthorize("hasRole('ADMIN')")
     @ResponseBody
     public String hello(){
         log.info("come in");
