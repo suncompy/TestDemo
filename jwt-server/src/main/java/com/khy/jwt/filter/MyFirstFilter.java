@@ -26,7 +26,7 @@ public class MyFirstFilter implements Filter {
             out.write(JSON.toJSONString(new RestfulResponse<>(false, error, 410, null)));
             out.flush();
             out.close();
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 

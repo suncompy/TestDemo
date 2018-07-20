@@ -21,9 +21,10 @@ public class IndexController {
     @RequestMapping("/hello")
     //@PreAuthorize("hasRole('ADMIN')")
     @ResponseBody
-    public String hello(){
+    public String hello() throws Exception {
         log.info("come in");
-        return "hello";
+        throw new Exception("index controller of exception");
+        //return "hello";
     }
 
     @GetMapping("/admin")
@@ -40,11 +41,6 @@ public class IndexController {
         return "Hello World! You are ADMIN ";
     }
 
-    @GetMapping("/hello")
-    public @ResponseBody
-    Object hello(String userId) {
-        return "Hello World! You have valid token";
-    }
 
     /*@Autowired
     UserDetailsService userDetailsService;
