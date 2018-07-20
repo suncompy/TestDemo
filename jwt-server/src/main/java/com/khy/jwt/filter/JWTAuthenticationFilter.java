@@ -2,10 +2,10 @@
 package com.khy.jwt.filter;
 
 import com.alibaba.fastjson.JSON;
-import com.khy.jwt.entity.JwtUser;
+import com.khy.jwt.exception.TokenException;
+import com.khy.jwt.service.impl.GrantedAuthorityImpl;
 import com.khy.jwt.utils.JwtUtil;
-import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,67 +41,22 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("进入doFilterInternal过滤器进行token的校验和解析");
-        //String header = request.getHeader("Authorization");
         Map<String, Object> parseToken = JwtUtil.validateTokenAndGetClaims(request);
-        String str = JSON.toJSONString(parseToken);
-        JwtUser jwtUser = JSON.parseObject(str, JwtUser.class);
-        /*return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.getUsername(),
-                        user.getPassword(),
-                        user.getAuthorities())
-        );*/
-
-        /*if (header == null || !header.startsWith("Bearer ")) {
-            chain.doFilter(request, response);
-            return;
-        }*/
-        //UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+        String[] roles = {};
+        try {
+            roles = JSON.parseObject(MapUtils.getString(parseToken, JwtUtil.ROLE), String[].class);
+        } catch (Exception e) {
+            log.error("解析用户header中的token失败，token = " + JSON.toJSONString(parseToken));
+            throw new TokenException("Token格式错误");
+        }
+        ArrayList<GrantedAuthority> authorities = new ArrayList<>();
+        for (int i = 0, j = roles.length; i < j; i++) {
+            authorities.add(new GrantedAuthorityImpl(roles[i]));
+        }
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(
-                        jwtUser.getUsername(), null, jwtUser.getAuthorities()
+                        MapUtils.getString(parseToken, JwtUtil.USERNAME), null, authorities
                 ));
         chain.doFilter(request, response);
     }
-
-    /*private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        if (token == null || token.isEmpty()) {
-            throw new TokenException("Token为空");
-        }
-        // parse the token.
-        String user = null;
-        try {
-            user = Jwts.parser()
-                    .setSigningKey(ConstantKey.SIGNING_KEY)
-                    .parseClaimsJws(token.replace("Bearer ", ""))
-                    .getBody()
-                    .getSubject();
-            if (user != null) {
-                String[] split = user.split("-")[1].split(",");
-                ArrayList<GrantedAuthority> authorities = new ArrayList<>();
-                for (int i=0; i < split.length; i++) {
-                    authorities.add(new GrantedAuthorityImpl(split[i]));
-                }
-                return new UsernamePasswordAuthenticationToken(user, null, authorities);
-            }
-        } catch (ExpiredJwtException e) {
-            logger.error("Token已过期: {} " + e);
-            throw new TokenException("Token已过期");
-        } catch (UnsupportedJwtException e) {
-            logger.error("Token格式错误: {} " + e);
-            throw new TokenException("Token格式错误");
-        } catch (MalformedJwtException e) {
-            logger.error("Token没有被正确构造: {} " + e);
-            throw new TokenException("Token没有被正确构造");
-        } catch (SignatureException e) {
-            logger.error("签名失败: {} " + e);
-            throw new TokenException("签名失败");
-        } catch (IllegalArgumentException e) {
-            logger.error("非法参数异常: {} " + e);
-            throw new TokenException("非法参数异常");
-        }
-        return null;
-    }*/
-
 }

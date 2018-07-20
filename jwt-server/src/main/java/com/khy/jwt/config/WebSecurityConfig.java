@@ -2,6 +2,7 @@ package com.khy.jwt.config;
 
 import com.khy.jwt.filter.JWTAuthenticationFilter;
 import com.khy.jwt.filter.JWTLoginFilter;
+import com.khy.jwt.service.UserService;
 import com.khy.jwt.service.impl.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     @Bean
-    UserDetailsService jwtUserService() { //注册UserServiceImpl的bean
+    UserService jwtUserService() { //注册UserServiceImpl的bean
         return new UserServiceImpl();
     }
 
@@ -77,6 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(jwtUserService()).passwordEncoder(new BCryptPasswordEncoder()); //添加我们自定义的user detail service认证
+        //auth.userDetailsService(jwtUserService()).passwordEncoder(new BCryptPasswordEncoder()); //添加我们自定义的user detail service认证
+        auth.authenticationProvider(new CustomAuthenticationProvider(jwtUserService(), new BCryptPasswordEncoder()));
     }
 }

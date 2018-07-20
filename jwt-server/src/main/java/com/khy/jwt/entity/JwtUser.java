@@ -23,7 +23,7 @@ public class JwtUser implements UserDetails {
     private String tokenType;
     //过期时间
     private String expireIn;
-    private List<Role> roles = Collections.emptyList();
+    private List<Role> roles = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
