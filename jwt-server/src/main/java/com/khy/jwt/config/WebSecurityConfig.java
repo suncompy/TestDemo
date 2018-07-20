@@ -2,6 +2,7 @@ package com.khy.jwt.config;
 
 import com.khy.jwt.filter.JWTAuthenticationFilter;
 import com.khy.jwt.filter.JWTLoginFilter;
+import com.khy.jwt.filter.MyFirstFilter;
 import com.khy.jwt.service.UserService;
 import com.khy.jwt.service.impl.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -65,6 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()  // 所有请求需要身份认证
                 .and()
                 //将我们定义的JWT方法加入SpringSecurity的处理流程中。
+                .addFilterBefore(new MyFirstFilter(), JWTLoginFilter.class)
                 .addFilter(new JWTLoginFilter(authenticationManager()))
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .logout() // 默认注销行为为logout，可以通过下面的方式来修改

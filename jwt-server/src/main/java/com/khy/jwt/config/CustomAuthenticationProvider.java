@@ -53,9 +53,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      */
     @Override
     public boolean supports(Class<?> authentication) {
-        System.out.println(authentication.getClass().getSimpleName());
+        /*System.out.println(authentication.getClass().getSimpleName());
         System.out.println(authentication.getClass().getName());
-        System.out.println(authentication.getClass().getCanonicalName());
+        System.out.println(authentication.getClass().getCanonicalName());*/
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 
