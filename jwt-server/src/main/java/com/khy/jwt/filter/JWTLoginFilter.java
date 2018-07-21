@@ -98,6 +98,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
+//    private static final PathMatcher pathMatcher = new AntPathMatcher();
     //我们只对地址 /api 开头的api检查jwt. 不然的话登录/login也需要jwt
     /*private boolean isProtectedUrl(HttpServletRequest request) {
         return pathMatcher.match("/api/**", request.getServletPath());
