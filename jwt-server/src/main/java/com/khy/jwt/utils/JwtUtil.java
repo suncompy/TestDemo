@@ -24,7 +24,6 @@ public class JwtUtil {
     public static String generateToken(Map<String, Object> user) {
         user.put(TIMESTAMP, new Date().getTime());
         String jwt = Jwts.builder()
-                .setSubject("{\"alg\":\"RS256\", \"typ\":\"JWT\"}")
                 .setClaims(user)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET)
