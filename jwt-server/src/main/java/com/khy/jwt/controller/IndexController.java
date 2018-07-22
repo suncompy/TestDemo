@@ -1,34 +1,35 @@
 package com.khy.jwt.controller;
 
-import com.khy.jwt.utils.JwtUtil;
-import javafx.application.Application;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
+@Api(value = "IndexController",description = "indexController测试接口")
 public class IndexController {
 
     @RequestMapping("/hello")
+    @ApiOperation(value = "获取hello",notes = "测试当前用户仅仅登录但是没有授权")
+    @ApiImplicitParam(paramType = "path",name = "cusId",required = true,value = "客户ID",dataType = "string")
     //@PreAuthorize("hasRole('ADMIN')")
     @ResponseBody
     public String hello() throws Exception {
         log.info("come in");
-        throw new Exception("index controller of exception");
-        //return "hello";
+        //throw new Exception("index controller of exception");
+        return "hello";
     }
 
     @GetMapping("/admin")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @ApiOperation(value = "获取ADMIN信息",notes = "根据客户ID获取客户信息")
     public @ResponseBody
     Object helloToAdmin(String userId) {
         return "Hello World! You are ADMIN ";
@@ -38,7 +39,7 @@ public class IndexController {
     @PreAuthorize("hasAuthority('NORMAL')")
     public @ResponseBody
     Object helloToNormal(String userId) {
-        return "Hello World! You are ADMIN ";
+        return "Hello World! You are NORMAL ";
     }
 
 
@@ -94,7 +95,4 @@ public class IndexController {
         public String password;
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
 }

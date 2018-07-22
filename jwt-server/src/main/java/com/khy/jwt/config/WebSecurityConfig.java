@@ -30,12 +30,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/signup",
             // -- swagger ui
             "/v2/api-docs",
-            "/swagger-resources",
             "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**"
+            "/swagger-ui.html**",
+            "/webjars/**",
+            "favicon.ico"
             // other public endpoints of your API may be appended to this array
     };
 
