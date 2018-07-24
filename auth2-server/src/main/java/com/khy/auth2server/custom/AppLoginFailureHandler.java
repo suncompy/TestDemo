@@ -2,7 +2,7 @@
 package com.khy.auth2server.custom;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.khy.auth2server.vo.SimpleResponse;
+import com.khy.auth2server.dto.SimpleResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;

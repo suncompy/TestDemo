@@ -58,4 +58,31 @@ public class JwtUtil {
             throw new TokenException("非法参数异常");
         }
     }
+
+    public static Map<String, Object> validateTokenAndGetClaims(String jwtToken) {
+        if (StringUtils.isBlank(jwtToken) || !jwtToken.startsWith(TOKEN_PREFIX))
+            throw new TokenException("Token为空或者格式不对");
+        // 当token无效时，解析token异常
+        try {
+            return Jwts.parser()
+                    .setSigningKey(SECRET)
+                    .parseClaimsJws(jwtToken.replace(TOKEN_PREFIX, ""))
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            logger.error("Token已过期: {} " + e);
+            throw new TokenException("Token已过期");
+        } catch (UnsupportedJwtException e) {
+            logger.error("Token格式错误: {} " + e);
+            throw new TokenException("Token格式错误");
+        } catch (MalformedJwtException e) {
+            logger.error("Token没有被正确构造: {} " + e);
+            throw new TokenException("Token没有被正确构造");
+        } catch (SignatureException e) {
+            logger.error("签名失败: {} " + e);
+            throw new TokenException("签名失败");
+        } catch (IllegalArgumentException e) {
+            logger.error("非法参数异常: {} " + e);
+            throw new TokenException("非法参数异常");
+        }
+    }
 }

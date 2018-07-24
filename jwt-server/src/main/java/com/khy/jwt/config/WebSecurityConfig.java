@@ -25,9 +25,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 需要放行的URL
      */
-    private static final String[] AUTH_WHITELIST = {
+    public static final String[] AUTH_WHITELIST = {
             // -- register url
             "/signup",
+            "/websocket.html",
+            "/main.css",
+            "/js/**",
+            "/gs-guide-websocket/**",
             // -- swagger ui
             "/v2/api-docs",
             "/swagger-resources/**",
@@ -71,6 +75,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .permitAll();// 设置注销成功后跳转页面，默认是跳转到登录页面;
+        /*http.authorizeRequests().antMatchers("/**").permitAll().and() .addFilterBefore(new MyFirstFilter(), JWTLoginFilter.class)
+                .addFilter(new JWTLoginFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()));*/
         // 禁用缓存
         http.headers().cacheControl();
     }
@@ -80,4 +87,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //auth.userDetailsService(jwtUserService()).passwordEncoder(new BCryptPasswordEncoder()); //添加我们自定义的user detail service认证
         auth.authenticationProvider(new CustomAuthenticationProvider(jwtUserService(), new BCryptPasswordEncoder()));
     }
+
+    /*@Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/resources/static/**");//忽略静态资源的拦截
+    }*/
 }
