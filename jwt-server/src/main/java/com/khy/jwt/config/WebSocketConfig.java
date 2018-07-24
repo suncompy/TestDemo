@@ -71,6 +71,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/gs-guide-websocket").withSockJS();
     }
 
+    /**
+     * 此处拦截首次连接(CONNECT),并进行token验证,同时把用户信息注入StompHeaderAccessor,这样才能够实现点对点通信.
+     *
+     * UsernamePasswordAuthenticationToken是Principal的实现类.
+     *
+     * websocket只有在握手的时候才会经过MyFirstFilter,JWTLoginFilter,JWTAuthenticationFilter这三个过滤器,当连接成功
+     * (即握手成功)后,后续的信息传输(包括send,disconnect)都不再经过以上过滤器,只会被该拦截器拦截
+     * @param registration
+     */
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.setInterceptors(new ChannelInterceptorAdapter() {
@@ -81,7 +90,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 //1. 判断是否首次连接请求
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                     String jwtToken = accessor.getFirstNativeHeader("Authorization");
-                    System.out.println(jwtToken);
                     log.debug("webSocket token is {}", jwtToken);
                     Map<String, Object> parseToken = JwtUtil.validateTokenAndGetClaims(jwtToken);
                     String[] roles = {};
@@ -99,15 +107,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                             MapUtils.getString(parseToken, JwtUtil.USERNAME), null, authorities
                     );
                     //SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                    /*if (StringUtils.isNotEmpty(jwtToken)) {
-                        Map sessionAttributes = SimpMessageHeaderAccessor.getSessionAttributes(message.getHeaders());
-                        sessionAttributes.put(CsrfToken.class.getName(), new DefaultCsrfToken("Auth-Token", "Auth-Token", jwtToken));
-                        UserAuthenticationToken authToken = tokenService.retrieveUserAuthToken(jwtToken);
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
-                        accessor.setUser(authToken);
-                    }*/
                     //验证成功,登录
-//                    Authentication user = new Authentication(""); // access authentication header(s)}
+                    //Authentication user = new Authentication(""); // access authentication header(s)}
                     accessor.setUser(usernamePasswordAuthenticationToken);
                     return message;
                 }

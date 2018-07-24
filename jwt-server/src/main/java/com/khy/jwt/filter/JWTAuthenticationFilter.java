@@ -46,7 +46,6 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
         log.debug("进入doFilterInternal过滤器进行token的校验和解析");
         System.out.println(request.getServletPath());
         if(isProtectedUrl(request)){
-            System.out.println("============"+request.getHeader("Authorization"));
             chain.doFilter(request, response);
         }else {
             Map<String, Object> parseToken = JwtUtil.validateTokenAndGetClaims(request);

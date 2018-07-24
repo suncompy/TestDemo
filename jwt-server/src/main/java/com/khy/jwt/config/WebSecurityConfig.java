@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String[] AUTH_WHITELIST = {
             // -- register url
             "/signup",
-            "/websocket.html",
+            "/websocket*.html",
             "/main.css",
             "/js/**",
             "/gs-guide-websocket/**",
@@ -75,9 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .permitAll();// 设置注销成功后跳转页面，默认是跳转到登录页面;
-        /*http.authorizeRequests().antMatchers("/**").permitAll().and() .addFilterBefore(new MyFirstFilter(), JWTLoginFilter.class)
-                .addFilter(new JWTLoginFilter(authenticationManager()))
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()));*/
+
         // 禁用缓存
         http.headers().cacheControl();
     }
