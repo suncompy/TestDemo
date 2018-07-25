@@ -6,11 +6,9 @@ import com.khy.jwt.service.impl.GrantedAuthorityImpl;
 import com.khy.jwt.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -18,11 +16,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptorAdapter;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.DefaultCsrfToken;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -58,6 +52,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.enableSimpleBroker("/topic");
         //定义服务端接受客户端发送信息的地址的前缀
         config.setApplicationDestinationPrefixes("/app");
+        //config.setUserDestinationPrefix("/user");//推送用户前缀
     }
 
     /**
@@ -73,11 +68,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     /**
      * 此处拦截首次连接(CONNECT),并进行token验证,同时把用户信息注入StompHeaderAccessor,这样才能够实现点对点通信.
-     *
+     * <p>
      * UsernamePasswordAuthenticationToken是Principal的实现类.
-     *
+     * <p>
      * websocket只有在握手的时候才会经过MyFirstFilter,JWTLoginFilter,JWTAuthenticationFilter这三个过滤器,当连接成功
      * (即握手成功)后,后续的信息传输(包括send,disconnect)都不再经过以上过滤器,只会被该拦截器拦截
+     *
      * @param registration
      */
     @Override
