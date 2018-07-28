@@ -1,5 +1,6 @@
 package com.khy.jwt.exception;
 
+import com.alibaba.fastjson.JSONException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,10 +14,30 @@ import javax.servlet.http.HttpServletResponse;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = {Exception.class, RuntimeException.class, TokenException.class})
+    /*@ExceptionHandler(value = {TokenException.class})
     @ResponseBody
-    public String jsonHandle(HttpServletRequest request, HttpServletResponse response) {
-        return "this is error exception";
+    public String tokenHandle(HttpServletRequest request, HttpServletResponse response) {
+        return "this is token error exception";
 
     }
+
+    @ExceptionHandler(value = {JSONException.class})
+    @ResponseBody
+    public String jsonHandle(HttpServletRequest request, HttpServletResponse response) {
+        return "this is json error exception";
+    }
+
+    @ExceptionHandler(value = {RuntimeException.class})
+    @ResponseBody
+    public String runtimeHandle(HttpServletRequest request, HttpServletResponse response) {
+        return "this is runtime error exception";
+
+    }
+
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseBody
+    public String globalHandle(HttpServletRequest request, HttpServletResponse response) {
+        return "this is global error exception";
+
+    }*/
 }

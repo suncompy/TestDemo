@@ -1,24 +1,23 @@
 package com.khy.jwt.controller;
 
+import com.khy.jwt.entity.JwtUser;
+import com.khy.jwt.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@Controller
-@Api(value = "IndexController",description = "indexController测试接口")
+@RestController
+@Api(value = "IndexController", description = "indexController测试接口")
 public class IndexController {
 
     @RequestMapping("/hello")
-    @ApiOperation(value = "获取hello",notes = "测试当前用户仅仅登录但是没有授权")
-    @ApiImplicitParam(paramType = "path",name = "cusId",required = true,value = "客户ID",dataType = "string")
+    @ApiOperation(value = "获取hello", notes = "测试当前用户仅仅登录但是没有授权")
+    @ApiImplicitParam(paramType = "path", name = "cusId", required = true, value = "客户ID", dataType = "string")
     //@PreAuthorize("hasRole('ADMIN')")
     @ResponseBody
     public String hello() throws Exception {
@@ -29,7 +28,7 @@ public class IndexController {
 
     @GetMapping("/admin")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @ApiOperation(value = "获取ADMIN信息",notes = "根据客户ID获取客户信息")
+    @ApiOperation(value = "获取ADMIN信息", notes = "根据客户ID获取客户信息")
     public @ResponseBody
     Object helloToAdmin(String userId) {
         return "Hello World! You are ADMIN ";
@@ -68,6 +67,7 @@ public class IndexController {
 
     /**
      * 注册用户 默认开启白名单
+     *
      * @param user
      */
     @PostMapping("/signup")
@@ -95,4 +95,59 @@ public class IndexController {
         public String password;
     }
 
+
+    //测试缓存
+
+
+    @Autowired
+    private UserService userService;
+
+    /**
+     * 根据ID获取信息
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/testCache/{id}")
+    public JwtUser test(@PathVariable("id") String id) {
+        return userService.get(id, "khy");
+    }
+
+    @GetMapping("/test/Time")
+    public JwtUser testCacheTime() {
+        return userService.get();
+    }
+
+    /**
+     * 删除某个ID的信息
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("{id}")
+    public String delete(@PathVariable("id") String id) {
+        return userService.delete(id);
+    }
+
+    /**
+     * 保存某个ID的信息
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping
+    public String save(@RequestParam("id") String id, @RequestParam("value") String value) {
+        return userService.save(id, value);
+    }
+
+    /**
+     * 跟新某个ID的信息
+     *
+     * @param id
+     * @return
+     */
+    @PutMapping("{id}")
+    public String update(@PathVariable("id") String id, @RequestParam("value") String value) {
+        return userService.update(id, value);
+    }
 }
