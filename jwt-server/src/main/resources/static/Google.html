@@ -1,5 +1,6 @@
 <!--https://blog.csdn.net/xianyu410725/article/details/50548922-->
 <!--https://blog.csdn.net/Miss_Liang/article/details/73166953-->
+<!--https://www.cnblogs.com/liuyushao/p/6971340.html-->
 
 <!DOCTYPE html>
 <html>
@@ -35,10 +36,6 @@
 
             var instance = new Notification(title, options);
 
-            setTimeout(function() {
-                instance.close();//关闭桌面通知
-            }, 5000);
-
             instance.onclick = function () {
                 // Something to do
                 console.log('onclick');
@@ -51,7 +48,7 @@
 //							setTimeout(instance.close, 3000);
                 setTimeout(function () {
                     instance.close();
-                }, 3000)
+                }, 10000);
                 console.log(instance.body)
             };
             instance.onclose = function () {
