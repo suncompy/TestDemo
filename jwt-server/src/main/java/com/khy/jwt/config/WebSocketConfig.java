@@ -58,12 +58,18 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     /**
      * endPoint 注册协议节点,并映射指定的URl
      *
+     * <p>
+     * 在这里我们用到.withSockJS()，SockJS是spring用来处理浏览器对websocket的兼容性，
+     * * 目前浏览器支持websocket还不是很好，特别是IE11以下.
+     * * SockJS能根据浏览器能否支持websocket来提供三种方式用于websocket请求，
+     * * 三种方式分别是 WebSocket, HTTP Streaming以及 HTTP Long Polling
+     *
      * @param registry
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        //注册一个Stomp 协议的endpoint,并指定 SockJS协议
-        registry.addEndpoint("/gs-guide-websocket").withSockJS();
+        //注册一个Stomp 协议的endpoint,并指定 SockJS协议   WebSocket跨域配置
+        registry.addEndpoint("/gs-guide-websocket").setAllowedOrigins("*").withSockJS();
     }
 
     /**
