@@ -7,18 +7,27 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -244,6 +253,63 @@ public class HttpClientUtils {
         entity.setContentType("application/json");
         httpPost.setEntity(entity);
         CloseableHttpResponse response = getHttpClient().execute(httpPost);
+        try {
+            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+                return EntityUtils.toString(response.getEntity(), Charset.forName("utf-8"));
+            } else {
+                logger.error("请求路径=".concat(url).concat(",返回参数状态码=").concat(String.valueOf(response.getStatusLine().getStatusCode())));
+                return null;
+            }
+
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            return null;
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+    }
+
+    /**
+     *  用于进行Https请求的HttpClient
+     * @return
+     */
+    public static CloseableHttpClient createSSLClientDefault(){
+        try {
+            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                //信任所有
+                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    return true;
+                }
+            }).build();
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
+            return HttpClients.custom().setSSLSocketFactory(sslsf).build();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+        return  HttpClients.createDefault();
+    }
+
+    /**
+     * 通过json方式发送post请求(https)
+     *
+     * @param url
+     * @param json
+     * @return
+     * @throws IOException
+     */
+    public static String postJsonByHttps(String url, String json) throws IOException {
+        HttpPost httpPost = new HttpPost(url);
+        StringEntity entity = new StringEntity(json, "utf-8");
+        entity.setContentEncoding("UTF-8");
+        entity.setContentType("application/json");
+        httpPost.setEntity(entity);
+        CloseableHttpResponse response = createSSLClientDefault().execute(httpPost);
         try {
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
                 return EntityUtils.toString(response.getEntity(), Charset.forName("utf-8"));
