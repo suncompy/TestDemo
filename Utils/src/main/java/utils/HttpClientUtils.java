@@ -1,5 +1,6 @@
 package utils;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -8,6 +9,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -28,10 +30,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -326,5 +325,58 @@ public class HttpClientUtils {
                 response.close();
             }
         }
+    }
+
+    /**
+     * HttpClient Post 二进制/字节流/byte[]
+     * @param url
+     * @param bytes
+     * @param contentType
+     * @return
+     * @throws IOException
+     */
+    public byte[] post(String url, byte[] bytes, String contentType) throws IOException {
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setEntity(new ByteArrayEntity(bytes));
+        if (contentType != null)
+            httpPost.setHeader("Content-type", contentType);
+        CloseableHttpResponse httpResponse = getHttpClient().execute(httpPost);
+        try {
+            HttpEntity entityResponse = httpResponse.getEntity();
+            int contentLength = (int) entityResponse.getContentLength();
+            if (contentLength <= 0)
+                throw new IOException("No response");
+            byte[] respBuffer = new byte[contentLength];
+            if (entityResponse.getContent().read(respBuffer) != respBuffer.length)
+                throw new IOException("Read response buffer error");
+            return respBuffer;
+        } finally {
+            httpResponse.close();
+        }
+        /*HttpEntity entity = response.getEntity();
+        if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+            responseContent = EntityUtils.toString(entity, Charset.forName("utf-8"));
+        } else {
+            logger.error("请求路径=".concat(url).concat(",返回参数状态码=").concat(String.valueOf(response.getStatusLine().getStatusCode())));
+            EntityUtils.consume(entity);
+        }
+        if (response != null) {
+            response.close();
+        }
+        return responseContent;*/
+    }
+
+
+
+    public static void main(String[] args) throws Exception {
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("a", "a");
+        param.put("b", "b");
+
+        /*Map<String, String> head = new HashMap<String, String>();
+        head.put("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        String s = httpClientUtils.getInstance().httpPost("http://127.0.0.1:8080/index", param, head);*/
+        byte[] s = httpClientUtils.getInstance().post("http://127.0.0.1:8080/index", JSON.toJSONBytes(param), "application/json; charset=UTF-8");
+        System.out.println(new String(s));
     }
 }
