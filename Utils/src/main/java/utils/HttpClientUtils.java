@@ -329,6 +329,9 @@ public class HttpClientUtils {
 
     /**
      * HttpClient Post 二进制/字节流/byte[]
+     * https://blog.csdn.net/sidyhe/article/details/51577578
+     * https://blog.csdn.net/u013766436/article/details/51095514
+     * https://blog.csdn.net/langzi7758521/article/details/51557179
      * @param url
      * @param bytes
      * @param contentType
