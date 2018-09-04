@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NetworkUtils {
     /**
@@ -50,5 +52,27 @@ public class NetworkUtils {
             }
         }
         return ip;
+    }
+
+    /**
+     * Java通过浏览器请求头（UserAgent）获取手机机型
+     * http://energykey.iteye.com/blog/2118491
+     * @param userAgent
+     * @return
+     */
+    public static String getModelFromDevice(String userAgent){
+        Pattern pattern = Pattern.compile(";\\s?(\\S*?\\s?\\S*?)\\s?(Build)?/");
+        Matcher matcher = pattern.matcher(userAgent);
+        String model = null;
+        if (matcher.find()) {
+            model = matcher.group(1).trim();
+            System.out.println("通过userAgent解析出机型：" + model);
+        }
+        return model;
+    }
+
+    public static void main(String[] args) {
+        String s = "Mozilla/5.0 (Linux; U; Android 4.0.4; zh-cn; HUAWEI C8825D Build/HuaweiC8825D) AppleWebKit/537.36 (KHTML, like Gecko)Version/4.0 MQQBrowser/5.3 Mobile Safari/537.36  ";
+        getModelFromDevice(s);
     }
 }
