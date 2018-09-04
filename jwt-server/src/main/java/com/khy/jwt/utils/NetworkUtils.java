@@ -1,5 +1,8 @@
 package com.khy.jwt.utils;
 
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.UserAgent;
+import eu.bitwalker.useragentutils.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +74,33 @@ public class NetworkUtils {
         return model;
     }
 
+    /**
+     * java从后台获取浏览器名称及版本号
+     * @param request
+     * @return
+     */
+    public String getVersionOfBrowser(HttpServletRequest request){
+        String info = "";
+        try {
+            //获取浏览器信息
+            Browser browser = UserAgent.parseUserAgentString(request.getHeader("User-Agent")).getBrowser();
+            //获取浏览器版本号
+            Version version = browser.getVersion(request.getHeader("User-Agent"));
+            info = browser.getName() + "/" + version.getVersion();
+        }catch (Exception e){
+            logger.error("从user-agent中获取版本失败，user-agent: {}", request.getHeader("User-Agent"));
+        }
+        return info;
+    }
+
     public static void main(String[] args) {
-        String s = "Mozilla/5.0 (Linux; U; Android 4.0.4; zh-cn; HUAWEI C8825D Build/HuaweiC8825D) AppleWebKit/537.36 (KHTML, like Gecko)Version/4.0 MQQBrowser/5.3 Mobile Safari/537.36  ";
-        getModelFromDevice(s);
+        String s = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36";
+        //s = "Meizu MX2 M040  Android 4.1     Baidu 4.1   Mozilla/5.0 (Linux; U; Android 4.1.1; zh-cn; M040 Build/JRO03H) AppleWebKit/534.24 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.24 T5/2.0 baidubrowser/4.2.4.0 (Baidu; P1 4.1.1)";
+        //获取浏览器信息
+        Browser browser = UserAgent.parseUserAgentString(s).getBrowser();
+        //获取浏览器版本号
+        Version version = browser.getVersion(s);
+        String info = browser.getName() + "/" + version.getVersion();
+        System.out.println(info);
     }
 }
