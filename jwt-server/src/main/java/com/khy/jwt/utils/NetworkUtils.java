@@ -5,6 +5,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import eu.bitwalker.useragentutils.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -91,6 +92,32 @@ public class NetworkUtils {
             logger.error("从user-agent中获取版本失败，user-agent: {}", request.getHeader("User-Agent"));
         }
         return info;
+    }
+
+    private static String[] MOBILE_KEYWORDS = { "android", "iphone", "ipod", "ipad", "windows phone", "mqqbrowser" };
+
+    /**
+     * 判断移动端还是PC端
+     * @param request
+     * @return
+     */
+    public String judgeMobileOrPC(HttpServletRequest request) {
+        String agent = request.getHeader("User-Agent").toLowerCase();
+        //Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36  电脑
+        //排除Window 桌面系统 和 苹果桌面系统
+        if (!agent.contains("windows nt") && !agent.contains("macintosh"))
+        {
+            for (String item : MOBILE_KEYWORDS)
+            {
+                if (agent.contains(item))
+                {
+                    //移动端
+                    return "mobile";
+                }
+            }
+        }
+        //非移动段
+        return "pc";
     }
 
     public static void main(String[] args) {
