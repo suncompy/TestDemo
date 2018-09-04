@@ -80,7 +80,7 @@ public class NetworkUtils {
      * @param request
      * @return
      */
-    public String getVersionOfBrowser(HttpServletRequest request){
+    public static String getVersionOfBrowser(HttpServletRequest request){
         String info = "";
         try {
             //获取浏览器信息
@@ -101,7 +101,7 @@ public class NetworkUtils {
      * @param request
      * @return
      */
-    public String judgeMobileOrPC(HttpServletRequest request) {
+    public static String judgeMobileOrPC(HttpServletRequest request) {
         String agent = request.getHeader("User-Agent").toLowerCase();
         //Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36  电脑
         //排除Window 桌面系统 和 苹果桌面系统
