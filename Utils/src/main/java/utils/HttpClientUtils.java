@@ -61,6 +61,7 @@ public class HttpClientUtils {
         CloseableHttpClient httpClient = HttpClients.custom()
                 .setConnectionManager(cm)
                 .build();
+        /*CloseableHttpClient httpClient = HttpClients.createDefault();//如果不采用连接池就是这种方式获取连接*/
         return httpClient;
     }
 
