@@ -134,6 +134,47 @@ public class Test {
         parametersMap.put("certificateType", "身份证");
 
 
+        /*List<Map<String, Object>> table3 = new ArrayList<Map<String, Object>>();
+        Map<String, Object> map7 = new HashMap<>();
+        map7.put("name1", "李强");
+        map7.put("name2", "李强");
+        map7.put("name3", "李强");
+        map7.put("name4", "李强");
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);
+        table3.add(map7);*/
+
         wordDataMap.put("table1", table1);
         wordDataMap.put("table2", table2);
         wordDataMap.put("parametersMap", parametersMap);
@@ -146,7 +187,7 @@ public class Test {
 
         // 替换数据
         template.replaceDocument(wordDataMap);
-
+        template.endAddTable();
 
         //生成文件
         File outputFile = new File("E:\\test\\输出.docx");//改成你本地文件所在目录

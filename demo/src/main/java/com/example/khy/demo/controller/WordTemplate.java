@@ -1,10 +1,14 @@
 package com.example.khy.demo.controller;
 
+
+
 import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +16,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ *
+ * https://blog.csdn.net/u012775558/article/details/79678701#commentBox
+ * https://www.cnblogs.com/dayuruozhi/p/6490793.html
+ * https://blog.csdn.net/ztt_1119/article/details/69390807
+ *
+ *
  * 对docx文件中的文本及表格中的内容进行替换 --模板仅支持对 {key} 标签的替换
  *
  * @author Juveniless
@@ -564,5 +574,131 @@ public class WordTemplate {
         return returnValue;
     }
 
+    /**
+     * https://blog.csdn.net/ztt_1119/article/details/69390807
+     */
+    public void endAddTable() {
+       /* XWPFParagraph p = document.createParagraph();// 新建一个段落
+        p.setAlignment(ParagraphAlignment.CENTER);// 设置段落的对齐方式
+        p.setBorderBottom(Borders.DOUBLE);//设置下边框
+        p.setBorderTop(Borders.DOUBLE);//设置上边框
+        p.setBorderRight(Borders.DOUBLE);//设置右边框
+        p.setBorderLeft(Borders.DOUBLE);//设置左边框
+        XWPFRun r = p.createRun();//创建段落文本
+        r.setText("POI创建的Word段落文本");
+        r.setBold(true);//设置为粗体
+        r.setColor("FF0000");//设置颜色
+        p = document.createParagraph();// 新建一个段落
+        r = p.createRun();
+        r.setText("POI读写Excel功能强大、操作简单。");*/
+        XWPFTable table = document.createTable(20, 4);//创建一个表格
+        //表格边框样式
+        tableBorderStyle(table);
+
+        //向表格中添加数据
+
+        //遍历表格插入数据
+        List<XWPFTableRow> rows = table.getRows();
+        for (int i = 1; i < rows.size(); i++) {
+            List<XWPFTableCell> cells = rows.get(i).getTableCells();
+            for (int j = 0; j < cells.size(); j++) {
+                XWPFTableCell cell = cells.get(j);
+                // 设置水平居中,需要ooxml-schemas包支持
+                CTTc cttc = cell.getCTTc();
+                CTTcPr ctPr = cttc.addNewTcPr();
+                ctPr.addNewVAlign().setVal(STVerticalJc.CENTER);
+                cttc.getPList().get(0).addNewPPr().addNewJc().setVal(STJc.CENTER);
+
+
+                tableTextStyle(cell, "李强");
+            }
+        }
+        /*CTTbl ttbl = table.getCTTbl();
+        CTTblPr tblPr = ttbl.getTblPr() == null ? ttbl.addNewTblPr() : ttbl.getTblPr();
+        CTTblWidth tblWidth = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
+        CTJc cTJc=tblPr.addNewJc();
+        cTJc.setVal(STJc.Enum.forString("center"));
+        tblWidth.setW(new BigInteger("8000"));
+        tblWidth.setType(STTblWidth.DXA);*/
+    }
+
+    /**
+     * 表格中字体样式
+     * @param tableCell
+     * @param text
+     */
+    private static void tableTextStyle(XWPFTableCell tableCell, String text) {
+        //创建一个段落
+        XWPFParagraph p0 = tableCell.addParagraph();
+        tableCell.setParagraph(p0);
+        //一个XWPFRun代表具有相同属性的一个区域
+        XWPFRun r0 = p0.createRun();
+        // 设置字体是否加粗
+        // r0.setBold(true);
+        r0.setFontSize(12);
+        // 设置使用何种字体
+        r0.setFontFamily("Helvetica Neue");
+        // 设置上下两行之间的间距
+        r0.setTextPosition(12);
+        r0.setTextPosition(20);
+        r0.setColor("333333");
+        r0.setText(text);
+    }
+
+
+    /**
+     * 表格样式
+     * @param table
+     */
+    private static void tableBorderStyle(XWPFTable table) {
+        //表格属性
+        CTTblPr tablePr = table.getCTTbl().addNewTblPr();
+
+        //表格宽度
+        CTTblWidth width = tablePr.addNewTblW();
+        width.setW(BigInteger.valueOf(8000));
+
+        //表格颜色
+        CTTblBorders borders = table.getCTTbl().getTblPr().addNewTblBorders();
+
+        //表格内部横向表格颜色
+        CTBorder hBorder = borders.addNewInsideH();
+        // 线条类型 STBorder.Enum.forString("single")
+        hBorder.setVal(STBorder.Enum.forString("single"));
+        // 线条大小
+        hBorder.setSz(new BigInteger("1"));
+        // 设置颜色
+        hBorder.setColor("FFF68F");
+
+        //表格内部纵向表格颜色
+        CTBorder vBorder = borders.addNewInsideV();
+        vBorder.setVal(STBorder.Enum.forString("single"));
+        vBorder.setSz(new BigInteger("1"));
+        vBorder.setColor("FFE1FF");
+
+        //表格最左边一条线的样式
+        CTBorder lBorder = borders.addNewLeft();
+        lBorder.setVal(STBorder.Enum.forString("single"));
+        lBorder.setSz(new BigInteger("1"));
+        lBorder.setColor("FFE1FF");
+
+        //表格最由边一条线的样式
+        CTBorder rBorder = borders.addNewRight();
+        rBorder.setVal(STBorder.Enum.forString("single"));
+        rBorder.setSz(new BigInteger("1"));
+        rBorder.setColor("DC143C");
+
+        //表格最上边一条线（顶部）的样式
+        CTBorder tBorder = borders.addNewTop();
+        tBorder.setVal(STBorder.Enum.forString("single"));
+        tBorder.setSz(new BigInteger("1"));
+        tBorder.setColor("CCCCCC");
+
+        //表格最下边一条线（底部）的样式
+        CTBorder bBorder = borders.addNewBottom();
+        bBorder.setVal(STBorder.Enum.forString("single"));
+        bBorder.setSz(new BigInteger("1"));
+        bBorder.setColor("dddddd");
+    }
 
 }
