@@ -22,7 +22,7 @@ public class BasicDocumentFormatRegistry implements DocumentFormatRegistry {
         if (extension == null) {
             return null;
         } else {
-            /*if (extension.indexOf("doc") >= 0) {
+            if (extension.indexOf("doc") >= 0) {
                 extension = "doc";
             }
             if (extension.indexOf("ppt") >= 0) {
@@ -30,7 +30,7 @@ public class BasicDocumentFormatRegistry implements DocumentFormatRegistry {
             }
             if (extension.indexOf("xls") >= 0) {
                 extension = "xls";
-            }*/
+            }
             String lowerExtension = extension.toLowerCase();
             Iterator it = this.documentFormats.iterator();
 
