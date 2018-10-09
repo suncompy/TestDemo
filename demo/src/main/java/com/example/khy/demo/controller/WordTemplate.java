@@ -594,7 +594,7 @@ public class WordTemplate {
         r.setText("POI读写Excel功能强大、操作简单。");*/
         XWPFTable table = document.createTable(20, 4);//创建一个表格
         // 设置上下左右四个方向的距离
-        table.setCellMargins(0, 700, 0, 0);//top, left, bottom, right
+        //table.setCellMargins(0, 0, 0, 0);//top, left, bottom, right
         //table.setInsideHBorder(XWPFTable.XWPFBorderType.NONE, 0, 0, "");//去除单元格间的横线
         //表格边框样式
         tableBorderStyle(table);
@@ -647,7 +647,7 @@ public class WordTemplate {
         //r0.setFontFamily("Helvetica Neue");
         // 设置上下两行之间的间距
         r0.setTextPosition(24);
-        r0.setColor("FFFFFF");
+        r0.setColor("DC143C");
         r0.setText(text);
     }
 
@@ -674,37 +674,37 @@ public class WordTemplate {
         // 线条大小
         hBorder.setSz(new BigInteger("1"));
         // 设置颜色
-        hBorder.setColor("FFFFFF");
+        hBorder.setColor("DC143C");
 
         //表格内部纵向表格颜色
         CTBorder vBorder = borders.addNewInsideV();
         vBorder.setVal(STBorder.Enum.forString("single"));
         vBorder.setSz(new BigInteger("1"));
-        vBorder.setColor("FFFFFF");
+        vBorder.setColor("DC143C");
 
         //表格最左边一条线的样式
         CTBorder lBorder = borders.addNewLeft();
         lBorder.setVal(STBorder.Enum.forString("single"));
         lBorder.setSz(new BigInteger("1"));
-        lBorder.setColor("FFFFFF");
+        lBorder.setColor("DC143C");
 
         //表格最由边一条线的样式
         CTBorder rBorder = borders.addNewRight();
         rBorder.setVal(STBorder.Enum.forString("single"));
         rBorder.setSz(new BigInteger("1"));
-        rBorder.setColor("FFFFFF");//DC143C 红色
+        rBorder.setColor("DC143C");//DC143C 红色
 
         //表格最上边一条线（顶部）的样式
         CTBorder tBorder = borders.addNewTop();
         tBorder.setVal(STBorder.Enum.forString("single"));
         tBorder.setSz(new BigInteger("1"));
-        tBorder.setColor("FFFFFF");
+        tBorder.setColor("DC143C");
 
         //表格最下边一条线（底部）的样式
         CTBorder bBorder = borders.addNewBottom();
         bBorder.setVal(STBorder.Enum.forString("single"));
         bBorder.setSz(new BigInteger("1"));
-        bBorder.setColor("FFFFFF");
+        bBorder.setColor("DC143C");
     }
 
 }
