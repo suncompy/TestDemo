@@ -13,6 +13,7 @@
         <module>auth2-server</module>
         <module>jwt-server</module>
         <module>demo</module>
+        <module>distribute</module>
     </modules>
 
     <packaging>pom</packaging>
