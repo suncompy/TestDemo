@@ -23,7 +23,7 @@ public class TestDemo {
 
     @Async
     public void testLock() {
-        /*for(int i =0, j = 100; i < j; i++){
+        for(int i =0, j = 10; i < j; i++){
             new Thread(()->{
                 try {
                     sub();
@@ -31,11 +31,6 @@ public class TestDemo {
                     e.printStackTrace();
                 }
             }).start();
-        }*/
-        try {
-            sub();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
