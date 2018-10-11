@@ -81,18 +81,4 @@ public class RedissonFactory {
         //创建客户端(发现这一非常耗时，基本在2秒-4秒左右)
         return Redisson.create(config);
     }
-
-
-    /**
-     * 装配locker类，并将实例注入到RedissLockUtil中
-     *
-     * @return
-     */
-    /*@Bean
-    DistributedLocker distributedLocker(RedissonClient redissonClient) {
-        DistributedLocker locker = new RedissonDistributedLocker();
-        locker.setRedissonClient(redissonClient);
-        RedissLockUtil.setLocker(locker);
-        return locker;
-    }*/
 }

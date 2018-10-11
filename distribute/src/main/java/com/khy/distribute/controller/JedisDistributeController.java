@@ -1,21 +1,24 @@
 package com.khy.distribute.controller;
 
-import com.khy.distribute.utils.DistributedRedissonLock;
-import org.redisson.api.RedissonClient;
+import com.khy.distribute.utils.JedisDistributeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
-public class TestDemo {
+public class JedisDistributeController {
     private static int i = 50;
 
     @Autowired
-    private RedissonClient redisson;
+    private StringRedisTemplate redisTemplate;
 
-    @RequestMapping(value = "/test", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/testjedis", method = RequestMethod.POST)
     public String test() {
         testLock();
         return "success";
@@ -23,7 +26,7 @@ public class TestDemo {
 
     @Async
     public void testLock() {
-        for(int i =0, j = 10; i < j; i++){
+        for(int i =0, j = 100; i < j; i++){
             new Thread(()->{
                 try {
                     sub();
@@ -36,13 +39,13 @@ public class TestDemo {
 
     public void sub() throws InterruptedException {
         String key = "one";
-        DistributedRedissonLock.acquire(redisson, key);
+        String uuid = UUID.randomUUID().toString();
+        JedisDistributeUtil.tryLock(redisTemplate, key, uuid, 2L);
         if(i>0){
-            //Thread.sleep(5000L);
+            //Thread.sleep(1000L);
             i--;
         }
         System.out.println(i);
-        DistributedRedissonLock.release(redisson, key);
+        JedisDistributeUtil.releaseLock(redisTemplate, key, uuid);
     }
-
 }

@@ -10,14 +10,14 @@ import java.util.concurrent.TimeUnit;
  * 加锁和释放锁的方法
  */
 @Component
-public class DistributedRedissonLock {
+public class DistributedRedissonUtil {
 
     private static final String LOCK_TITLE = "redisson_Lock_";
 
     public static boolean acquire(RedissonClient redisson, String lockName){
         String key = LOCK_TITLE + lockName;
         RLock mylock = redisson.getLock(key);
-        mylock.lock(2, TimeUnit.MINUTES); //lock提供带timeout参数，timeout结束强制解锁，防止死锁
+        mylock.lock(2, TimeUnit.SECONDS); //lock提供带timeout参数，timeout结束强制解锁，防止死锁
         System.err.println("======lock======"+Thread.currentThread().getName());
         return  true;
     }
