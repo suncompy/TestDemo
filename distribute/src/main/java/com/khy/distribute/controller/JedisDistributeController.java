@@ -40,7 +40,7 @@ public class JedisDistributeController {
     public void sub() throws InterruptedException {
         String key = "one";
         String uuid = UUID.randomUUID().toString();
-        JedisDistributeUtil.tryLock(redisTemplate, key, uuid, 2L);
+        JedisDistributeUtil.tryLock(redisTemplate, key, uuid, 10L);
         if(i>0){
             //Thread.sleep(1000L);
             i--;
