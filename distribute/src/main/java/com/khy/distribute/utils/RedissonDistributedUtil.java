@@ -38,6 +38,9 @@ public class RedissonDistributedUtil {
         String key = LOCK_TITLE + lockName;
         RLock mylock = redisson.getLock(key);
         if (mylock != null) {
+            /*if(!mylock.isHeldByCurrentThread()){
+                System.out.println("超时自动放锁.......");
+            }*/
             mylock.unlock();
         }
         System.err.println("======unlock======"+Thread.currentThread().getName());
