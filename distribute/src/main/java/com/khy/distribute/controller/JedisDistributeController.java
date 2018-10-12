@@ -40,12 +40,18 @@ public class JedisDistributeController {
     public void sub() throws InterruptedException {
         String key = "one";
         String uuid = UUID.randomUUID().toString();
-        JedisDistributeUtil.tryLock(redisTemplate, key, uuid, 10L);
-        if(i>0){
-            //Thread.sleep(1000L);
-            i--;
+        Boolean status = JedisDistributeUtil.tryLock(redisTemplate, key, uuid, 10L);
+        //加锁成功
+        if(status){
+            if(i>0){
+                //Thread.sleep(1000L);
+                i--;
+            }
+            System.out.println(i);
+        }else {
+            System.out.println("加锁失败");
         }
-        System.out.println(i);
+        //释放锁
         JedisDistributeUtil.releaseLock(redisTemplate, key, uuid);
     }
 }

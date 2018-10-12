@@ -1,6 +1,6 @@
 package com.khy.distribute.controller;
 
-import com.khy.distribute.utils.DistributedRedissonUtil;
+import com.khy.distribute.utils.RedissonDistributedUtil;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -36,13 +36,13 @@ public class RedissonDistributeController {
 
     public void sub() throws InterruptedException {
         String key = "one";
-        DistributedRedissonUtil.acquire(redisson, key);
+        RedissonDistributedUtil.acquire(redisson, key, 5);
         if(i>0){
             //Thread.sleep(1000L);
             i--;
         }
         System.out.println(i);
-        DistributedRedissonUtil.release(redisson, key);
+        RedissonDistributedUtil.release(redisson, key);
     }
 
 }
