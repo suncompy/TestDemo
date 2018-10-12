@@ -2,6 +2,7 @@ package com.khy.jwt.controller;
 
 import com.khy.jwt.entity.JwtUser;
 import com.khy.jwt.service.UserService;
+import com.khy.jwt.utils.NetworkUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -9,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -149,5 +153,10 @@ public class IndexController {
     @PutMapping("{id}")
     public String update(@PathVariable("id") String id, @RequestParam("value") String value) {
         return userService.update(id, value);
+    }
+
+    @GetMapping("/common/testip")
+    public String testip(HttpServletRequest request) throws IOException {
+        return NetworkUtils.getIpAddress(request);
     }
 }

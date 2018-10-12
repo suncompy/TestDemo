@@ -28,6 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String[] AUTH_WHITELIST = {
             // -- register url
             "/signup",
+            "/common/**",
             "/websocket*.html",
             "/main.css",
             "/js/**",
