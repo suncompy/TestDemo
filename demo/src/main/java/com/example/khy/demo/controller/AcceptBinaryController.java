@@ -13,6 +13,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ * 测试接收HttpClient Post 二进制/字节流/byte[]
+ */
 @Controller
 public class AcceptBinaryController {
 

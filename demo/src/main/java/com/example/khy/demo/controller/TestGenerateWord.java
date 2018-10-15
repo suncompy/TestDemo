@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 通过WordTemplate模板生成Word文档
+ */
 public class TestGenerateWord {
 
     public static void main(String[] args) throws IOException {
