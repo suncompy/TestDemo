@@ -45,9 +45,3 @@ mybatis-plus:
     db-config:
       id-type: auto
       column-underline: true
-
-#凌凯短信账号配置
-LK:
-  CorpID: CDJS000133
-  Pwd: 12345@B
-  url: http://sdk2.028lk.com:9880/sdk2/linkWS.asmx/BatchSend
