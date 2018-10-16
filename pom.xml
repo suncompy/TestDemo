@@ -14,6 +14,7 @@
         <module>jwt-server</module>
         <module>demo</module>
         <module>distribute</module>
+        <module>mybatis-plus</module>
     </modules>
 
     <packaging>pom</packaging>
