@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.khy.mybatisplus.dao.UserMapper">
+
+  <!--<sql id="Base_Column_List">
+    id, deleted, enabled, username, password, gender, nickname, phone_number, email_address,
+    identity_card, create_at, create_by, modify_at, modify_by, last_login_time
+  </sql>-->
+
+  <!--获取用户列表-->
+  <select id="selectUserPage" resultType="com.khy.mybatisplus.entity.User">
+    SELECT u.*
+    FROM
+    qk_scaffold.`user` u
+    <where>
+      ${ew.sqlSegment}
+    </where>
+  </select>
+
+</mapper>

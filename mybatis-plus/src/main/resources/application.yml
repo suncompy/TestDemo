@@ -1,0 +1,53 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: khy-mybatis-plus
+  thymeleaf:
+    mode: HTML
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      # 连接池建立时创建的初始化连接数
+      initial-size: 1
+      # 连接池中最小的活跃连接数
+      min-idle: 3
+      # 连接池中最大的活跃连接数
+      max-active: 20
+      # 配置获取连接等待超时的时间
+      max-wait: 10000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 50000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      # 验证连接有效与否的SQL，不同的数据配置不同
+      validation-query: "select 1"
+      # 是否在连接空闲一段时间后检测其可用性
+      test-while-idle: true
+      # 是否在获得连接后检测其可用性
+      test-on-borrow: false
+      # 是否在连接放回连接池后检测其可用性
+      test-on-return: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      # 配置监控统计拦截的filters
+      filters: stat
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.khy.mybatisplus.entity
+  configuration:
+    cache-enabled: true
+    lazy-loading-enabled: true
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+      column-underline: true
+
+#凌凯短信账号配置
+LK:
+  CorpID: CDJS000133
+  Pwd: 12345@B
+  url: http://sdk2.028lk.com:9880/sdk2/linkWS.asmx/BatchSend

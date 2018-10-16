@@ -1,0 +1,30 @@
+server:
+  port: 9010
+spring:
+  #热部署
+  devtools:
+    restart:
+      enabled: false
+  datasource:
+    url: jdbc:mysql://192.168.7.68:3309/qk_scaffold?zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2b8&useSSL=false
+    username: EcomDev
+    password: EcomDev
+  redis:
+    database: 0
+    host: 192.168.7.68
+    port: 6379
+    password:
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+      shutdown-timeout: 100ms
+    timeout: 30000ms
+logging:
+  level:
+    org.springframework:
+      web: INFO
+      security: INFO
+    com.qiye.qk.scaffold.api: DEBUG
