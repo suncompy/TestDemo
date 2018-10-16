@@ -27,4 +27,7 @@ logging:
     org.springframework:
       web: INFO
       security: INFO
-    com.qiye.qk.scaffold.api: DEBUG
+    #设置将SQL语句打印到控制台
+    com.khy.mybatisplus.dao: DEBUG
+  #日志位置
+  file: /log/mybatis-plus.log
